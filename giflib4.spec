@@ -8,12 +8,12 @@ Summary(pl.UTF-8):	Biblioteka do obróbki plików GIF
 Summary(pt_BR.UTF-8):	Biblioteca de manipulação de arquivos GIF
 Summary(ru.UTF-8):	Библиотека для работы с GIF-файлами
 Summary(uk.UTF-8):	Бібліотека для роботи з GIF-файлами
-Name:		giflib
+Name:		giflib4
 Version:	4.2.3
 Release:	1
 License:	MIT-like
 Group:		Libraries
-Source0:	http://downloads.sourceforge.net/giflib/%{name}-%{version}.tar.bz2
+Source0:	http://downloads.sourceforge.net/giflib/giflib-%{version}.tar.bz2
 # Source0-md5:	be1f5749c24644257a88c9f42429343d
 Patch0:		%{name}-link.patch
 URL:		http://sourceforge.net/projects/giflib/
@@ -31,6 +31,7 @@ Provides:	libungif.so.4()(64bit)
 Provides:	libungif.so.4
 %endif
 Provides:	libungif
+Obsoletes:	giflib < 5
 Obsoletes:	libungif
 Obsoletes:	libungif4
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -68,6 +69,7 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 %{?with_x:Requires:	xorg-lib-libX11-devel}
 Provides:	libungif-devel
+Obsoletes:	giflib-devel < 5
 Obsoletes:	libungif-devel
 Obsoletes:	libungif4-devel
 
@@ -105,6 +107,7 @@ Summary(uk.UTF-8):	Статичні бібліотеки GIF-бібліотек�
 Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Provides:	libungif-static
+Obsoletes:	giflib-static < 5
 Obsoletes:	libungif-static
 
 %description static
@@ -133,6 +136,7 @@ Summary(uk.UTF-8):	Програми для конвертування та об�
 Group:		Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-progs
+Obsoletes:	giflib-progs < 5
 Obsoletes:	libungif-progs
 
 %description progs
@@ -150,7 +154,7 @@ GIF.
 Цей пакет містить різноманітні програми для обробки GIF-файлів.
 
 %prep
-%setup -q
+%setup -q -n giflib-%{version}
 %patch0 -p1
 
 %build
