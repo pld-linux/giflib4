@@ -1,0 +1,8 @@
+--- giflib-4.2.3/lib/Makefile.am.orig
++++ giflib-4.2.3/lib/Makefile.am
+@@ -16,5 +16,4 @@
+ 					gif_lib_private.h
+ 
+ libgif_la_LDFLAGS = -no-undefined -version-info @SHLIBVERSION@
+-libgif_la_LIBADD = @DEVS@
+ libgif_CFLAGS = $(X_CFLAGS) $(AM_CFLAGS)

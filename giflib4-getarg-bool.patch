@@ -1,0 +1,37 @@
+--- giflib-4.2.3/util/getarg.c.orig
++++ giflib-4.2.3/util/getarg.c
+@@ -54,9 +54,9 @@
+  *
+  * The variables passed to GAGetArgs (starting from 4th parameter) MUST
+  * match the order of the CtrlStr:
+- * For each option, one integer address must be passed. This integer must
+- * initialized by 0. If that option is given in the command line, it will
+- * be set to one.
++ * For each option, one bool address must be passed. This bool must
++ * initialized by false. If that option is given in the command line, it will
++ * be set to true.
+  * In addition, the sequences that might follow an option require the
+  * following parameters to pass:
+  * 1. d, x, o, u - pointer to integer (int *).
+@@ -273,7 +273,7 @@
+                                                 correct prm. */
+     i += 3;
+     /* Set boolean flag for that option. */
+-    *Parameters[(*ParamCount)++] = BooleanTrue;
++    *(bool *)Parameters[(*ParamCount)++] = BooleanTrue;
+     if (ISSPACE(CtrlStrCopy[i]))
+         return ARG_OK;    /* Only a boolean flag is needed. */
+ 
+--- giflib-4.2.3/util/rgb2gif.c.orig
++++ giflib-4.2.3/util/rgb2gif.c
+@@ -386,8 +386,8 @@
+ ******************************************************************************/
+ int main(int argc, char **argv)
+ {
+-    int	NumFiles, Width, Height, SizeFlag;
+-    bool Error;
++    int	NumFiles, Width, Height;
++    bool Error, SizeFlag;
+     char **FileName = NULL;
+     GifByteType *RedBuffer = NULL, *GreenBuffer = NULL, *BlueBuffer = NULL,
+ 	*OutputBuffer = NULL;

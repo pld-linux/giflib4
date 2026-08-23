@@ -10,17 +10,19 @@ Summary(ru.UTF-8):	Библиотека для работы с GIF-файлам�
 Summary(uk.UTF-8):	Бібліотека для роботи з GIF-файлами
 Name:		giflib4
 Version:	4.2.3
-Release:	2
+Release:	3
 License:	MIT-like
 Group:		Libraries
-Source0:	http://downloads.sourceforge.net/giflib/giflib-%{version}.tar.bz2
+Source0:	https://downloads.sourceforge.net/giflib/giflib-%{version}.tar.bz2
 # Source0-md5:	be1f5749c24644257a88c9f42429343d
 Patch0:		%{name}-link.patch
-URL:		http://sourceforge.net/projects/giflib/
+Patch1:		%{name}-includes.patch
+Patch2:		%{name}-lib-no-x11.patch
+Patch3:		%{name}-getarg-bool.patch
+URL:		https://sourceforge.net/projects/giflib/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
 BuildRequires:	libtool
-BuildRequires:	netpbm-devel
 BuildRequires:	rpmbuild(macros) >= 1.213
 BuildRequires:	sed
 BuildRequires:	xmlto
@@ -67,7 +69,6 @@ Summary(ru.UTF-8):	Хедеры, библиотеки и документаци�
 Summary(uk.UTF-8):	Хедери, бібліотеки та документація GIF-бібліотеки
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-%{?with_x:Requires:	xorg-lib-libX11-devel}
 Provides:	libungif-devel
 Obsoletes:	giflib-devel < 5
 Obsoletes:	libungif-devel
@@ -156,6 +157,9 @@ GIF.
 %prep
 %setup -q -n giflib-%{version}
 %patch -P0 -p1
+%patch -P1 -p1
+%patch -P2 -p1
+%patch -P3 -p1
 
 %build
 %{__libtoolize}
