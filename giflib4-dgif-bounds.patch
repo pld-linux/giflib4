@@ -1,0 +1,27 @@
+# CVE-2018-11490: an unchecked LZW RunningCode index lets DGifDecompressLine
+# write past Prefix[] and Suffix[].
+# CVE-2019-15133: DGifSlurp does not reject zero Width/Height.
+# https://sourceforge.net/p/giflib/code/ci/08438a5098f3bb1de23a29334af55eba663f75bd
+# https://sourceforge.net/p/giflib/code/ci/799eb6a3af8a3dd81e2429bf11a72a57e541f908
+--- giflib-4.2.3/lib/dgif_lib.c
++++ giflib-4.2.3/lib/dgif_lib.c
+@@ -831,7 +831,9 @@
+                 while (StackPtr != 0 && i < LineLen)
+                     Line[i++] = Stack[--StackPtr];
+             }
+-            if (LastCode != NO_SUCH_CODE && Prefix[Private->RunningCode - 2] == NO_SUCH_CODE) {
++            if (LastCode != NO_SUCH_CODE &&
++                    Private->RunningCode - 2 < LZ_MAX_CODE &&
++                    Prefix[Private->RunningCode - 2] == NO_SUCH_CODE) {
+                 Prefix[Private->RunningCode - 2] = LastCode;
+ 
+                 if (CrntCode == Private->RunningCode - 2) {
+@@ -1032,7 +1034,7 @@
+ 
+               sp = &GifFile->SavedImages[GifFile->ImageCount - 1];
+               /* Allocate memory for the image */
+-              if (sp->ImageDesc.Width < 0 && sp->ImageDesc.Height < 0 &&
++              if (sp->ImageDesc.Width <= 0 || sp->ImageDesc.Height <= 0 ||
+                       sp->ImageDesc.Width > (INT_MAX / sp->ImageDesc.Height)) {
+                   return GIF_ERROR;
+               }

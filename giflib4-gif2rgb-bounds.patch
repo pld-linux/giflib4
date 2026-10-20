@@ -1,0 +1,39 @@
+# gif2rgb's DumpScreen2RGB indexes the color map with unchecked pixel values,
+# reading past its end for images with an out-of-range background or pixel
+# index; free the screen buffer on exit as well.
+# CVE-2016-3977, CVE-2020-23922, CVE-2021-40633, CVE-2022-28506,
+# CVE-2023-48161, CVE-2024-45993, CVE-2025-31344
+# https://sourceforge.net/p/giflib/code/ci/368f28c0034ecfb6dd4b3412af4cc589a56e0611
+# https://sourceforge.net/p/giflib/code/ci/ccbc956432650734c91acb3fc88837f7b81267ff
+# https://sourceforge.net/p/giflib/code/ci/7bbe8ea1a595bb7509ffa0a86b076e9b720e85af
+--- giflib-4.2.3/util/gif2rgb.c
++++ giflib-4.2.3/util/gif2rgb.c
+@@ -210,6 +210,10 @@
+     DumpScreen2RGB(OutFileName, OneFileFlag,
+ 		   ScreenBuffer, GifFile->SWidth, GifFile->SHeight);
+ 
++    for (i = 0; i < GifFile->SHeight; i++)
++	free((char *) ScreenBuffer[i]);
++    free((char *) ScreenBuffer);
++
+     if (DGifCloseFile(GifFile) == GIF_ERROR) {
+ 	PrintGifError();
+ 	exit(EXIT_FAILURE);
+@@ -269,6 +273,8 @@
+             GifRow = ScreenBuffer[i];
+             GifQprintf("\b\b\b\b%-4d", ScreenHeight - i);
+             for (j = 0, BufferP = Buffer; j < ScreenWidth; j++) {
++                if (GifRow[j] >= ColorMap->ColorCount)
++                    GIF_EXIT("Color index out of range for colormap");
+                 ColorMapEntry = &ColorMap->Colors[GifRow[j]];
+                 *BufferP++ = ColorMapEntry->Red;
+                 *BufferP++ = ColorMapEntry->Green;
+@@ -292,6 +298,8 @@
+             GifRow = ScreenBuffer[i];
+             GifQprintf("\b\b\b\b%-4d", ScreenHeight - i);
+             for (j = 0; j < ScreenWidth; j++) {
++                if (GifRow[j] >= ColorMap->ColorCount)
++                    GIF_EXIT("Color index out of range for colormap");
+                 ColorMapEntry = &ColorMap->Colors[GifRow[j]];
+                 Buffers[0][j] = ColorMapEntry->Red;
+                 Buffers[1][j] = ColorMapEntry->Green;

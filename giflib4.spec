@@ -10,7 +10,7 @@ Summary(ru.UTF-8):	Библиотека для работы с GIF-файлам�
 Summary(uk.UTF-8):	Бібліотека для роботи з GIF-файлами
 Name:		giflib4
 Version:	4.2.3
-Release:	3
+Release:	4
 License:	MIT-like
 Group:		Libraries
 Source0:	https://downloads.sourceforge.net/giflib/giflib-%{version}.tar.bz2
@@ -19,6 +19,10 @@ Patch0:		%{name}-link.patch
 Patch1:		%{name}-includes.patch
 Patch2:		%{name}-lib-no-x11.patch
 Patch3:		%{name}-getarg-bool.patch
+Patch4:		%{name}-CVE-2015-7555.patch
+Patch5:		%{name}-dgif-bounds.patch
+Patch6:		%{name}-gif2rgb-bounds.patch
+Patch7:		%{name}-CVE-2026-23868.patch
 URL:		https://sourceforge.net/projects/giflib/
 BuildRequires:	autoconf >= 2.59-9
 BuildRequires:	automake
@@ -34,8 +38,8 @@ Provides:	libungif.so.4
 %endif
 Provides:	libungif
 Obsoletes:	giflib < 5
-Obsoletes:	libungif
-Obsoletes:	libungif4
+Obsoletes:	libungif < 5
+Obsoletes:	libungif4 < 5
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -71,8 +75,8 @@ Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-devel
 Obsoletes:	giflib-devel < 5
-Obsoletes:	libungif-devel
-Obsoletes:	libungif4-devel
+Obsoletes:	libungif-devel < 5
+Obsoletes:	libungif4-devel < 5
 
 %description devel
 Libraries and headers needed for developing programs that use libgif
@@ -109,7 +113,7 @@ Group:		Development/Libraries
 Requires:	%{name}-devel = %{version}-%{release}
 Provides:	libungif-static
 Obsoletes:	giflib-static < 5
-Obsoletes:	libungif-static
+Obsoletes:	libungif-static < 5
 
 %description static
 Static libraries needed for developing programs that use libgif to
@@ -138,7 +142,7 @@ Group:		Applications/Graphics
 Requires:	%{name} = %{version}-%{release}
 Provides:	libungif-progs
 Obsoletes:	giflib-progs < 5
-Obsoletes:	libungif-progs
+Obsoletes:	libungif-progs < 5
 
 %description progs
 This package contains various programs for manipulating GIF image
@@ -160,6 +164,10 @@ GIF.
 %patch -P1 -p1
 %patch -P2 -p1
 %patch -P3 -p1
+%patch -P4 -p1
+%patch -P5 -p1
+%patch -P6 -p1
+%patch -P7 -p1
 
 %build
 %{__libtoolize}
@@ -197,14 +205,14 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc AUTHORS BUGS COPYING ChangeLog NEWS README TODO
 %attr(755,root,root) %{_libdir}/libgif.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libgif.so.4
-%attr(755,root,root) %{_libdir}/libungif.so.4
+%ghost %{_libdir}/libgif.so.4
+%{_libdir}/libungif.so.4
 
 %files devel
 %defattr(644,root,root,755)
 %doc doc/*.txt doc/{gif_lib,intro,liberror}.html
-%attr(755,root,root) %{_libdir}/libgif.so
-%attr(755,root,root) %{_libdir}/libungif.so
+%{_libdir}/libgif.so
+%{_libdir}/libungif.so
 %{_libdir}/libgif.la
 %{_libdir}/libungif.la
 %{_includedir}/gif_lib.h
